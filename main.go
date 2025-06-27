@@ -33,7 +33,7 @@ func main() {
 		for i := 0; i < 8; i++ {
 			// for loop check 
 			for _, char := range inp {
-				if char < 33 || char > 126 {
+				if char < 32 || char > 126 {
 					fmt.Println("not working")
 					return
 				}
