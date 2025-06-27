@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+
 func printLine(arr []string, char int, line int) {
 	str := strings.Split(arr[char-32], "\n")
 	fmt.Print(str[line])
@@ -22,7 +23,11 @@ func main() {
 	file, _ := os.Open("standard.txt")
 	defer file.Close()
 	out, _ := io.ReadAll(file)
-	standart := strings.Split(string(out), "\n\n")
+	standart1 := strings.ReplaceAll(string(out),"\r","")
+	standart := strings.Split(standart1, "\n\n")
+	// "\n      \n      \n      \n      \n      \n      \n      \n      \n\n
+	// "\r\n      \r\n      \r\n      \r\n      \r\n      \r\n      \r\n      \r\n
+	
 	input := args[0]
 	inputArr := strings.Split(input, "\\n")
 	for _, inp := range inputArr {
@@ -40,7 +45,7 @@ func main() {
 				if char != ' ' {
 					printLine(standart, int(char), i)
 				} else {
-					(printLine(standart, int(' '), i+1))
+					printLine(standart, int(' '), i+1)
 				}
 			}
 			fmt.Println()
