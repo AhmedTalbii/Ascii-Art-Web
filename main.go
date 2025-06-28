@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -12,16 +13,59 @@ func printLine(AsciiShapes []string, char int, i int) {
 	fmt.Print(str[i])
 }
 
+func CheckNewLines(arr []string) bool {
+	for _, v := range arr {
+		if v != "" {
+			return false
+		}
+	}
+	return true
+}
+
 func main() {
 	args := os.Args[1:]
 	if len(args) != 1 {
 		fmt.Println("Invalid number of areguments... ")
 		return
 	}
+	fileName := "standard.txt"
+	// check if file have write permession
+	// if yes delet the file after this dawnload
 
-	file, err := os.Open("standard.txt")
+	info, err := os.Stat(fileName)
 	if err != nil {
-		fmt.Println("Error Opening File... ", err)
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("Owner can write?", info.Mode()&0o200 != 0)
+
+	fmt.Println(info.Mode().String())
+	return
+
+	_, errOpen := os.Open(fileName)
+	if errOpen != nil {
+		if os.IsNotExist(errOpen) {
+			url := "https://learn.zone01oujda.ma/api/content/root/public/subjects/ascii-art/" + fileName
+
+			// download the file
+			errDownload := exec.Command("wget", "-q", url).Run()
+			if errDownload != nil {
+				fmt.Println("Download failed:", errDownload)
+				return
+			}
+
+			// change the permission
+			erPermission := exec.Command("chmod", "400", fileName).Run()
+			if erPermission != nil {
+				fmt.Println("Error changing the permission:", erPermission)
+				return
+			}
+		}
+	}
+
+	file, er := os.Open(fileName)
+	if er != nil {
+		fmt.Println("Error Opening File... ", er)
 		return
 	}
 	defer file.Close()
@@ -34,7 +78,6 @@ func main() {
 
 	CleanFileData := strings.ReplaceAll(string(fileData), "\r", "")
 	AsciiShapes := strings.Split(CleanFileData, "\n\n")
-
 	input := args[0]
 
 	// validate user input
@@ -46,6 +89,12 @@ func main() {
 	}
 
 	inputLines := strings.Split(input, "\\n")
+
+	// if the input contain only new lines
+	if CheckNewLines(inputLines) {
+		inputLines = inputLines[1:]
+	}
+
 	for _, Inpline := range inputLines {
 		if Inpline == "" {
 			fmt.Println()
