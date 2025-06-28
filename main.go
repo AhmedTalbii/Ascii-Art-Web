@@ -7,45 +7,56 @@ import (
 	"strings"
 )
 
-
-func printLine(arr []string, char int, line int) {
-	str := strings.Split(arr[char-32], "\n")
-	fmt.Print(str[line])
+func printLine(AsciiShapes []string, char int, i int) {
+	str := strings.Split(AsciiShapes[char-32], "\n")
+	fmt.Print(str[i])
 }
 
 func main() {
-	// from 32 witch is space to 126 witch is ~
 	args := os.Args[1:]
 	if len(args) != 1 {
-		fmt.Println("Invalid number of areguments")
+		fmt.Println("Invalid number of areguments... ")
 		return
 	}
-	file, _ := os.Open("standard.txt")
+
+	file, err := os.Open("standard.txt")
+	if err != nil {
+		fmt.Println("Error Opening File... ", err)
+		return
+	}
 	defer file.Close()
-	out, _ := io.ReadAll(file)
-	standart1 := strings.ReplaceAll(string(out),"\r","")
-	standart := strings.Split(standart1, "\n\n")
-	// "\n      \n      \n      \n      \n      \n      \n      \n      \n\n
-	// "\r\n      \r\n      \r\n      \r\n      \r\n      \r\n      \r\n      \r\n
-	
+
+	fileData, er := io.ReadAll(file)
+	if er != nil {
+		fmt.Println("Error Reading file... ", er)
+		return
+	}
+
+	CleanFileData := strings.ReplaceAll(string(fileData), "\r", "")
+	AsciiShapes := strings.Split(CleanFileData, "\n\n")
+
 	input := args[0]
-	inputArr := strings.Split(input, "\\n")
-	for _, inp := range inputArr {
-		if inp == "" {
+
+	// validate user input
+	for _, char := range input {
+		if char < 32 || char > 126 {
+			fmt.Println("The string includes characters outside the ASCII range... ")
+			return
+		}
+	}
+
+	inputLines := strings.Split(input, "\\n")
+	for _, Inpline := range inputLines {
+		if Inpline == "" {
 			fmt.Println()
 			continue
 		}
 		for i := 0; i < 8; i++ {
-			// for loop check 
-			for _, char := range inp {
-				if char < 32 || char > 126 {
-					fmt.Println("not working")
-					return
-				}
+			for _, char := range Inpline {
 				if char != ' ' {
-					printLine(standart, int(char), i)
+					printLine(AsciiShapes, int(char), i)
 				} else {
-					printLine(standart, int(' '), i+1)
+					printLine(AsciiShapes, int(char), i+1)
 				}
 			}
 			fmt.Println()
