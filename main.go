@@ -29,18 +29,20 @@ func main() {
 		return
 	}
 	fileName := "standard.txt"
-	// check if file have write permession
-	// if yes delet the file after this dawnload
 
 	info, err := os.Stat(fileName)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	fmt.Println("Owner can write?", info.Mode()&0o200 != 0)
 
-	fmt.Println(info.Mode().String())
-	return
+	if info.Mode() != 0o400 {
+		erRemoveFile := exec.Command("rm", "-f", fileName).Run()
+		if erRemoveFile != nil {
+			fmt.Println("Error removing file:", erRemoveFile)
+			return
+		}
+	}
 
 	_, errOpen := os.Open(fileName)
 	if errOpen != nil {
