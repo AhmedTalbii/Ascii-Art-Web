@@ -33,14 +33,13 @@ func main() {
 	info, err := os.Stat(fileName)
 	if err != nil {
 		fmt.Println("Error:", err)
-		return
-	}
-
-	if info.Mode() != 0o400 {
-		erRemoveFile := exec.Command("rm", "-f", fileName).Run()
-		if erRemoveFile != nil {
-			fmt.Println("Error removing file:", erRemoveFile)
-			return
+	} else {
+		if info.Mode() != 0o400 {
+			erRemoveFile := exec.Command("rm", "-f", fileName).Run()
+			if erRemoveFile != nil {
+				fmt.Println("Error removing file:", erRemoveFile)
+				return
+			}
 		}
 	}
 
