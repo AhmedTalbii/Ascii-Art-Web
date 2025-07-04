@@ -1,15 +1,16 @@
 package main
 
 import (
-	asciiart "ascii-art/asciiArt"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+
+	asciiart "ascii-art/asciiArt"
 )
 
 var (
-	tampl = template.Must(template.ParseFiles("./templates/index.html"))
+	tampl   = template.Must(template.ParseFiles("./templates/index.html"))
 	lastOut string
 )
 
@@ -44,6 +45,7 @@ func main() {
 		HandleRendering(w, r)
 	})
 	mux.HandleFunc("/ascii-art", HandlePost)
+	mux.Handle("/styles/", http.StripPrefix("/styles/", http.FileServer(http.Dir("./styles"))))
 	fmt.Println("server running on http://localhost:3000/")
 	if err := http.ListenAndServe(":3000", mux); err != nil {
 		log.Fatalf("HTTP server failed: %v", err)
