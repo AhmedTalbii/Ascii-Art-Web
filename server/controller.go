@@ -25,7 +25,6 @@ func StartServer() {
 
 	mux.HandleFunc("/", renderPage)
 	mux.HandleFunc("/ascii-art", handlePost)
-	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css"))))
 	serv := &http.Server{
 		Addr:    ":3000",
 		Handler: mux,
