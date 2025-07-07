@@ -73,14 +73,15 @@ func AsciiArt(input string, banner string) (string,error) {
 	CleanFileData := strings.ReplaceAll(string(fileData), "\r", "")
 	AsciiShapes := strings.Split(CleanFileData, "\n\n")
 
+	input = strings.ReplaceAll(input, "\r", "")
+
 	// validate user input
 	for _, char := range input {
-		if char < 32 || char > 126 {
-			return "", errors.New("The string includes characters outside the ASCII range... ")
+		if char != '\n' && (char < 32 || char > 126) {
+			return "", errors.New("The string includes characters outside the ASCII range... "+string(char))
 		}
 	}
-
-	inputLines := strings.Split(input, "\\n")
+	inputLines := strings.Split(input, "\n")
 
 	// if the input contain only new lines
 	if CheckNewLines(inputLines) {

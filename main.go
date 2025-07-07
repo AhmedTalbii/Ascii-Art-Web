@@ -1,53 +1,15 @@
 package main
 
 import (
+	"ascii-art/server"
 	"fmt"
-	"html/template"
-	"log"
-	"net/http"
-
-	asciiart "ascii-art/asciiArt"
+	"os"
 )
-
-var (
-	tampl   = template.Must(template.ParseFiles("./templates/index.html"))
-	lastOut string
-)
-
-func HandleRendering(w http.ResponseWriter, r *http.Request) {
-	tampl.Execute(w, lastOut)
-}
-
-func HandlePost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
-	text := r.FormValue("inputText")
-	file := r.FormValue("dropDown")
-
-	out, errA := asciiart.AsciiArt(text, file)
-	if errA != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	lastOut = out
-	http.Redirect(w, r, "/", http.StatusSeeOther)
-}
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/" {
-			http.NotFound(w, r)
-			return
-		}
-		HandleRendering(w, r)
-	})
-	mux.HandleFunc("/ascii-art", HandlePost)
-	mux.Handle("/styles/", http.StripPrefix("/styles/", http.FileServer(http.Dir("./styles"))))
-	fmt.Println("server running on http://localhost:3000/")
-	if err := http.ListenAndServe(":3000", mux); err != nil {
-		log.Fatalf("HTTP server failed: %v", err)
+	if len(os.Args) != 1 {
+		fmt.Println("invalid number of aruments ...")
+		return
 	}
+	server.StartServer()
 }

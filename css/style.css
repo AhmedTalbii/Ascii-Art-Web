@@ -1,0 +1,132 @@
+ body {
+     width: 100vw;
+     margin: 0;
+     padding: 30px;
+     box-sizing: border-box;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 20px;
+ }
+
+ .navBar {
+     position: fixed;
+     top: 0;
+     width: 100%;
+     height: 200px;
+ }
+
+ .navBar .parent {
+     display: flex;
+     justify-content: space-between;
+     padding-inline: 2rem;
+     padding: 25px;
+     z-index: 9999;
+ }
+
+ .navBar .parent img {
+     width: 90px;
+     height: 90px;
+     border-radius: 50px;
+     object-fit: cover;
+     border: 0px;
+     box-shadow: 2px 2px 5px 2px #888888;
+     transition: 0.2s;
+ }
+
+ .form {
+     margin-top: 1%;
+     width: 300px;
+     height: auto;
+     display: flex;
+     align-items: center;
+     gap: 5%;
+     background-color: white;
+     border: 0px;
+     border-radius: 5;
+     padding: 0px;
+     transform: translateX(-30%);
+ }
+
+ .form .textInput {
+     padding: 10px;
+     width: 250px;
+     height: 90px;
+     border: 0px;
+     border-radius: 10px;
+     box-shadow: 2px 2px 5px 2px #888888;
+     transition: 0.2s;
+ }
+
+ .form .changeText {
+     padding: 20px;
+     background-color: rgba(255, 255, 255, 0.795);
+     border-radius: 30px;
+     outline-color: rgba(0, 0, 0, 0);
+     border: 0px;
+     box-shadow: 2px 2px 5px 2px #888888;
+     transition: 0.2s;
+ }
+
+ .form .dropDown {
+     border-radius: 30px;
+     background: #ffffff;
+     padding: 20px;
+     border: 0px;
+     box-shadow: 2px 2px 5px 2px #888888;
+     transition: 0.2s;
+ }
+
+ .textInput:focus,
+ .textInput:hover,
+ .dropDown:hover,
+ input:hover {
+     border: 0px;
+     background-color: rgba(194, 194, 194, 0.795);
+     box-shadow: 0px 0px #888888;
+ }
+
+ .output {
+     width: 90%;
+     height: 70vh;
+     resize: none;
+     padding: 10px;
+     border-radius: 5px;
+     border: 1px solid gray;
+     box-sizing: border-box;
+     overflow-x: auto;
+     overflow-y: auto;
+     white-space: pre;
+ }
+
+ .midlle {
+     width: 100%;
+     height: auto;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+
+ @media (max-width: 800px) {
+     .navBar {
+         display: none;
+     }
+ }
+
+ @media (max-width: 600px) {
+     .form {
+         margin-top: 2%;
+         padding-top: 2%;
+         left: 50%;
+         flex-direction: column;
+         padding: 5px;
+         transform: translateX(-0%);
+         gap: 25px;
+     }
+
+     .midlle {
+         align-items: end;
+         margin-top: 20px;
+     }
+ }
