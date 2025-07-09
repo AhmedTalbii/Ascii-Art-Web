@@ -10,19 +10,26 @@ import (
 )
 
 type dataRender struct {
-  Input    string
-  AsciiArt string
+	SelectedFont string
+	Input    string
+	AsciiArt string
 }
 
 var (
 	tmpl    = template.Must(template.ParseFiles("./templates/index.html"))
-	lastOut dataRender
+	text string
+	font string
+	out string
+	err error
 )
-
 
 func StartServer() {
 	mux := http.NewServeMux()
-
+	
+	mux.HandleFunc("/templates/css/", func(w http.ResponseWriter, r *http.Request) {
+		CssHandle(w, r, mux)
+	})
+	
 	mux.HandleFunc("/", renderPage)
 	mux.HandleFunc("/ascii-art", handlePost)
 	serv := &http.Server{
@@ -36,12 +43,17 @@ func StartServer() {
 
 func renderPage(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		tmpErr := template.Must(template.ParseFiles("./templates/error.html"))
-		w.WriteHeader(http.StatusNotFound)
-		tmpErr.Execute(w, nil)
+		renderError(w, r)
 		return
 	}
-	if err := tmpl.Execute(w, lastOut); err != nil {
+
+	nD := &dataRender{
+		SelectedFont: font,
+		Input: text,
+		AsciiArt: out,
+	}
+
+	if err := tmpl.Execute(w, nD); err != nil {
 		http.Error(w, "Template error: "+err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -52,20 +64,14 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	text := r.FormValue("inputText")
-	font := r.FormValue("dropDown")
+	text = r.FormValue("inputText")
+	font = r.FormValue("dropDown")
 
-	
-	out, err := asciiart.AsciiArt(text, font)
-	nD := &dataRender {
-		Input: text,
-		AsciiArt: out,
-	}
+	out, err = asciiart.AsciiArt(text, font)
 	if err != nil {
 		http.Error(w, "AsciiArt error: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	lastOut = *nD
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
