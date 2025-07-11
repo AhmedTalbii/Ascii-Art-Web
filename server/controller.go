@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	asciiart "ascii-art/asciiArt"
+	"ascii-art/config"
 )
 
 type dataRender struct {
@@ -33,11 +34,11 @@ func StartServer() {
 	mux.HandleFunc("/", renderPage)
 	mux.HandleFunc("/ascii-art", handlePost)
 	serv := &http.Server{
-		Addr:    ":3000",
+		Addr:    config.Port,
 		Handler: mux,
 	}
 
-	fmt.Println("Server running at http://localhost:3000/")
+	fmt.Println("Server running at http://localhost"+config.Port)
 	log.Fatal(serv.ListenAndServe())
 }
 
