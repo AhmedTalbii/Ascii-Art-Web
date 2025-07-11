@@ -1,23 +1,30 @@
 package server
 
 import (
+	asciiart "ascii-art/asciiArt"
 	"html/template"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
+
+type ErrFormat struct {
+	Stat string
+	Eror string
+}
 
 func CssHandle(w http.ResponseWriter, r *http.Request, mux *http.ServeMux) {
 	nPath := strings.TrimPrefix(r.URL.Path, "/templates/css/")
 	nPath = "templates/css/" + nPath
 	fileInfo, err := os.Stat(nPath)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		RenderError(w, r , http.StatusNotFound,"ERROR PAGE NOT FOUND")
 		return
 	}
 
 	if fileInfo.IsDir() {
-		renderError(w, r)
+		RenderError(w, r, http.StatusForbidden,"ERROR ACCES FORBIDDEN")
 		return
 	}
 	// this concept is somme how hard 
@@ -28,8 +35,14 @@ func CssHandle(w http.ResponseWriter, r *http.Request, mux *http.ServeMux) {
 	http.StripPrefix("/templates/css/", http.FileServer(http.Dir("templates/css"))).ServeHTTP(w, r)
 }
 
-func renderError(w http.ResponseWriter, r *http.Request) {
+func RenderError(w http.ResponseWriter, r *http.Request , status int, errS string) {
 	tmpErr := template.Must(template.ParseFiles("./templates/error.html"))
 	w.WriteHeader(http.StatusNotFound)
-	tmpErr.Execute(w, nil)
+	asc,_ := asciiart.AsciiArt(strconv.Itoa(status),"standard")
+	errS,_ = asciiart.AsciiArt(errS,"standard")
+	nD := &ErrFormat{
+		Stat: asc,
+		Eror: errS,
+	}
+	tmpErr.Execute(w, nD)
 }

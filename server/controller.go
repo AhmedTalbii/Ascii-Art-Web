@@ -43,7 +43,7 @@ func StartServer() {
 
 func renderPage(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		renderError(w, r)
+		RenderError(w, r , http.StatusNotFound,"ERROR PAGE NOT FOUND")
 		return
 	}
 
