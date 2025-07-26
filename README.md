@@ -2,6 +2,10 @@
 
 A web-based interface for converting text into ASCII art banners, built with Go and served via a clean browser interface.
 
+This project was created as part of the **Zone01** curriculum.  
+It is a web-based update of my earlier terminal-based project:  
+👉 [Old ASCII Art Repository](https://github.com/AhmedTalbii/Ascii-Art)
+
 ## 🚀 Features
 
 - Multiple ASCII art styles: Standard, Shadow, ThinkerToy.
@@ -44,3 +48,4 @@ Then open your browser and go to `http://localhost:3000`.
 2. Select a banner style.
 3. Enter the text you want to convert.
 4. Click **Generate**, preview the ASCII art, and download as `.txt`.
+
